@@ -1,0 +1,9 @@
+.env
+output/
+_site/
+index.html
+__pycache__/
+*.pyc
+.DS_Store
+venv/
+.venv/

@@ -1,0 +1,51 @@
+name: Update Portfolio
+
+on:
+  schedule:
+    # Every Monday at 08:00 UTC
+    - cron: '0 8 * * 1'
+  # Allow manual runs from the Actions tab
+  workflow_dispatch:
+
+# Required to push to the gh-pages branch
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate portfolio report
+        env:
+          # Optional: set GH_PAT in repo secrets for higher API rate limits (5 000 req/hr).
+          # If not set, the script falls back to unauthenticated calls (60 req/hr),
+          # which is enough for most profiles.
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          mkdir -p _site
+          python main.py --username dajozu2513 --output ./_site/index.html
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          # secrets.GITHUB_TOKEN is the automatic token provided by Actions.
+          # It has write access to this repo, so no extra setup is needed for deployment.
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site
+          publish_branch: gh-pages
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'chore: update portfolio report'
