@@ -1,6 +1,6 @@
 import math
 import os
-from datetime import date, timedelta
+from datetime import date
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader
@@ -46,6 +46,11 @@ _FALLBACK_COLORS = [
 _DONUT_R = 70.0
 _DONUT_C = 2 * math.pi * _DONUT_R  # ≈ 439.82
 
+_MONTH_ES = ["Ene", "Feb", "Mar", "Abr", "May", "Jun",
+             "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
+_MONTH_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
 
 def _build_lang_color_map(language_distribution: dict[str, float]) -> dict[str, str]:
     return {
@@ -75,53 +80,46 @@ def _build_donut_segments(
     return segments
 
 
-def _build_contrib_grid(
-    daily_commits: dict[str, int],
-) -> tuple[list[list], list[str]]:
+def _build_monthly_bars(daily_commits: dict[str, int]) -> list[dict]:
     """
-    Returns (weeks, month_labels).
-    weeks: 52 items, each a list of 7 day-dicts (Sun→Sat) or None for future days.
-    month_labels: 52 strings — abbreviated month name at first column of each month, else "".
+    Returns 12 dicts (oldest → newest month) with bar chart data.
+    Each dict: year, month, key (YYYY-MM), count, height_pct, is_zero, month_es, month_en.
     """
     today = date.today()
-    days_since_sunday = (today.weekday() + 1) % 7
-    current_week_sunday = today - timedelta(days=days_since_sunday)
-    start_sunday = current_week_sunday - timedelta(weeks=51)
 
-    max_count = max(daily_commits.values()) if daily_commits else 1
+    # Last 12 calendar months in chronological order
+    months: list[tuple[int, int]] = []
+    for i in range(11, -1, -1):
+        m = today.month - i
+        y = today.year
+        if m <= 0:
+            m += 12
+            y -= 1
+        months.append((y, m))
 
-    weeks: list[list] = []
-    month_labels: list[str] = []
-    prev_month: str | None = None
+    # Aggregate daily commits into monthly buckets
+    monthly_counts: dict[str, int] = {}
+    for date_str, count in daily_commits.items():
+        key = date_str[:7]  # YYYY-MM
+        monthly_counts[key] = monthly_counts.get(key, 0) + count
 
-    for week_idx in range(52):
-        week_start = start_sunday + timedelta(weeks=week_idx)
-        month_abbr = week_start.strftime("%b")
-        month_labels.append(month_abbr if month_abbr != prev_month else "")
-        prev_month = month_abbr
+    bars: list[dict] = []
+    for y, m in months:
+        key = f"{y:04d}-{m:02d}"
+        count = monthly_counts.get(key, 0)
+        bars.append({"year": y, "month": m, "key": key, "count": count})
 
-        week: list = []
-        for day_offset in range(7):
-            d = week_start + timedelta(days=day_offset)
-            if d > today:
-                week.append(None)
-            else:
-                count = daily_commits.get(d.isoformat(), 0)
-                ratio = count / max_count if max_count > 0 and count > 0 else 0
-                if count == 0:
-                    level = 0
-                elif ratio < 0.25:
-                    level = 1
-                elif ratio < 0.50:
-                    level = 2
-                elif ratio < 0.75:
-                    level = 3
-                else:
-                    level = 4
-                week.append({"date": d.isoformat(), "count": count, "level": level})
-        weeks.append(week)
+    max_count = max((b["count"] for b in bars), default=0)
+    if max_count == 0:
+        max_count = 1  # avoid division by zero
 
-    return weeks, month_labels
+    for bar in bars:
+        bar["height_pct"] = round(bar["count"] / max_count * 100, 1)
+        bar["is_zero"] = bar["count"] == 0
+        bar["month_es"] = _MONTH_ES[bar["month"] - 1]
+        bar["month_en"] = _MONTH_EN[bar["month"] - 1]
+
+    return bars
 
 
 class ReportGenerator:
@@ -146,9 +144,8 @@ class ReportGenerator:
 
         lang_color_map = _build_lang_color_map(language_distribution)
         donut_segments = _build_donut_segments(language_distribution, lang_color_map)
-        contrib_weeks, contrib_month_labels = _build_contrib_grid(commit_frequency)
+        monthly_bars = _build_monthly_bars(commit_frequency)
 
-        # Primary language color for JS drop-shadow
         primary_lang_color = lang_color_map.get(
             summary_stats.get("primary_language", ""), "#8b949e"
         )
@@ -162,8 +159,7 @@ class ReportGenerator:
             donut_segments=donut_segments,
             donut_c=round(_DONUT_C, 2),
             top_repos=top_repos,
-            contrib_weeks=contrib_weeks,
-            contrib_month_labels=contrib_month_labels,
+            monthly_bars=monthly_bars,
             primary_lang_color=primary_lang_color,
         )
 

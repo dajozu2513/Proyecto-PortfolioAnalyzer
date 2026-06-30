@@ -72,15 +72,7 @@ def main() -> None:
             )
         progress.update(task, description=f"[green]✓[/green] {len(repos)} repositories fetched")
 
-        # ── 3. Fetch languages per repo ──
-        progress.update(task, description="Fetching language data…")
-        repos_languages: list[dict] = []
-        for repo in repos:
-            langs = client.get_languages(args.username, repo["name"])
-            repos_languages.append(langs)
-        progress.update(task, description="[green]✓[/green] Language data fetched")
-
-        # ── 4. Fetch commits (top 10 repos by stars to stay under rate limits) ──
+        # ── 3. Fetch commits (top 10 repos by stars to stay under rate limits) ──
         progress.update(task, description="Fetching commit history…")
         sorted_by_stars = sorted(repos, key=lambda r: r.get("stargazers_count", 0), reverse=True)
         commits_by_repo: dict[str, list] = {}
@@ -90,15 +82,15 @@ def main() -> None:
                 commits_by_repo[repo["name"]] = commits
         progress.update(task, description="[green]✓[/green] Commit history fetched")
 
-        # ── 5. Compute metrics ──
+        # ── 4. Compute metrics ──
         progress.update(task, description="Computing metrics…")
-        language_distribution = compute_language_distribution(repos_languages)
+        language_distribution = compute_language_distribution(repos)
         top_repos = compute_top_repos(repos, n=5)
         commit_frequency = compute_commit_frequency(commits_by_repo)
-        summary_stats = compute_summary_stats(repos, commits_by_repo)
+        summary_stats = compute_summary_stats(repos, commits_by_repo, language_distribution)
         progress.update(task, description="[green]✓[/green] Metrics computed")
 
-        # ── 6. Render HTML report ──
+        # ── 5. Render HTML report ──
         progress.update(task, description="Rendering HTML report…")
         generator = ReportGenerator()
         output_path = generator.generate(

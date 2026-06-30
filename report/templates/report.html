@@ -33,7 +33,7 @@
     padding: 0 1rem 4rem;
   }
 
-  .container { max-width: 860px; margin: 0 auto; }
+  .container { max-width: 1280px; margin: 0 auto; }
 
   a { color: var(--accent-blue); text-decoration: none; }
   a:hover { text-decoration: underline; }
@@ -147,46 +147,42 @@
   .repo-updated, .repo-forks { font-size: 12px; color: var(--text-muted); }
   .repo-forks { font-family: var(--font-mono); }
 
-  /* ── Contribution grid ── */
-  .contrib-wrapper { overflow-x: auto; }
-
-  .contrib-months {
-    display: flex; gap: 3px;
-    margin-bottom: 4px; padding-left: 0;
+  /* ── Monthly bar chart ── */
+  .bar-summary {
+    font-size: 12px; color: var(--text-muted);
+    font-family: var(--font-mono); margin-bottom: 1.25rem;
   }
-  .contrib-month-col {
-    flex: 0 0 11px; min-width: 11px;
+
+  .bar-chart {
+    display: flex; gap: 6px; height: 160px;
+  }
+
+  .bar-col {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+  }
+
+  .bar-count {
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--text-muted); height: 16px; line-height: 16px;
+    text-align: center; white-space: nowrap;
+  }
+
+  .bar-body {
+    flex: 1; width: 100%; display: flex; align-items: flex-end;
+  }
+
+  .bar-fill {
+    width: 100%; background: var(--accent-green);
+    border-radius: 3px 3px 0 0; min-height: 3px;
+    transition: background 0.15s;
+  }
+  .bar-fill--zero { background: var(--border-default); }
+  .bar-fill:hover { background: var(--accent-green-bright); }
+
+  .bar-label {
     font-family: var(--font-mono); font-size: 9px;
-    color: var(--text-muted);
-    overflow: visible; white-space: nowrap;
+    color: var(--text-muted); margin-top: 5px; text-align: center;
   }
-
-  .contrib-graph { display: flex; gap: 3px; }
-  .contrib-week { display: flex; flex-direction: column; gap: 3px; }
-
-  .contrib-cell {
-    width: 11px; height: 11px; border-radius: 2px; flex-shrink: 0;
-  }
-  .contrib-empty { opacity: 0; pointer-events: none; }
-
-  .contrib-cell[data-level="0"] { background: #21262d; }
-  .contrib-cell[data-level="1"] { background: #0e4429; }
-  .contrib-cell[data-level="2"] { background: #006d32; }
-  .contrib-cell[data-level="3"] { background: #26a641; }
-  .contrib-cell[data-level="4"] { background: #39d353; }
-
-  .contrib-cell[title]:hover {
-    outline: 1px solid var(--border-default);
-    outline-offset: 1px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .contrib-legend {
-    display: flex; align-items: center; gap: 0.4rem;
-    margin-top: 0.75rem; font-size: 11px; color: var(--text-muted);
-  }
-  .contrib-legend-cell { width: 11px; height: 11px; border-radius: 2px; }
 
   /* ── Footer ── */
   .footer {
@@ -194,6 +190,41 @@
     border-top: 1px solid var(--border-default);
     display: flex; justify-content: space-between; align-items: center;
     font-size: 12px; color: var(--text-muted); font-family: var(--font-mono);
+  }
+
+  /* ── Two-column desktop layout ── */
+  .two-col { margin-bottom: 2.5rem; }
+
+  @media (min-width: 1024px) {
+    .two-col {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 3.5rem;
+      align-items: start;
+    }
+    .two-col > .section { margin-bottom: 0; }
+
+    /* Header typography */
+    .header-info h1 { font-size: 28px; }
+    .header-info .handle { font-size: 23px; }
+    .header-info .bio { font-size: 15px; }
+
+    /* Stat badges */
+    .stat-pill { padding: 0.35rem 1rem; font-size: 13px; }
+    .pill-value { font-size: 15px; }
+    .pill-label { font-size: 12px; }
+
+    /* Donut */
+    #lang-donut { width: 220px; height: 220px; }
+
+    /* Repo cards */
+    .repo-card { padding: 1.25rem 1.5rem; }
+    .repo-name { font-size: 15px; }
+
+    /* Vertical spacing */
+    .section { margin-bottom: 3rem; }
+    .stat-grid { margin-bottom: 3rem; }
+    .two-col { margin-bottom: 3rem; }
   }
 
   @media (max-width: 640px) {
@@ -262,10 +293,13 @@
     {% endif %}
   </div>
 
+  <!-- ── 3 + 4. Two-column block (Languages | Top Repos) ── -->
+  <div class="two-col">
+
   <!-- ── 3. Languages ── -->
   {% if language_distribution %}
   <section class="section">
-    <div class="section-title" data-es="Lenguajes" data-en="Languages">Lenguajes</div>
+    <div class="section-title" data-es="Lenguajes por repositorio" data-en="Languages by repositories">Lenguajes por repositorio</div>
 
     <div class="lang-segment-bar">
       {% for lang, pct in language_distribution.items() %}{% if loop.index <= 8 %}
@@ -323,7 +357,7 @@
 
   <!-- ── 4. Top Repositories ── -->
   <section class="section">
-    <div class="section-title" data-es="Repositorios destacados" data-en="Top Repositories">Repositorios destacados</div>
+    <div class="section-title" data-es="Repositorios recientes" data-en="Recent Repositories">Repositorios recientes</div>
     <div class="repo-list">
       {% for repo in top_repos %}
       <div class="repo-card">
@@ -353,41 +387,31 @@
     </div>
   </section>
 
-  <!-- ── 5. Commit Activity — 52-week contribution grid ── -->
+  </div><!-- /.two-col -->
+
+  <!-- ── 5. Commit Activity — 12-month bar chart ── -->
   <section class="section">
     <div class="section-title" data-es="Actividad de commits" data-en="Commit Activity">Actividad de commits</div>
-    <div class="contrib-wrapper">
-      <!-- Month labels row -->
-      <div class="contrib-months">
-        {% for label in contrib_month_labels %}
-        <div class="contrib-month-col">{{ label }}</div>
-        {% endfor %}
-      </div>
-      <!-- Grid: 52 columns × 7 rows -->
-      <div class="contrib-graph">
-        {% for week in contrib_weeks %}
-        <div class="contrib-week">
-          {% for day in week %}
-          {% if day is none %}
-          <div class="contrib-cell contrib-empty"></div>
-          {% else %}
-          <div class="contrib-cell"
-               data-level="{{ day.level }}"
-               title="{{ day.date }}: {{ day.count }} commits"></div>
-          {% endif %}
-          {% endfor %}
-        </div>
-        {% endfor %}
-      </div>
+    <div class="bar-summary">
+      <span data-es="{{ stats.total_commits_year }} commits en los últimos 12 meses"
+            data-en="{{ stats.total_commits_year }} commits in the last 12 months">
+        {{ stats.total_commits_year }} commits en los últimos 12 meses
+      </span>
     </div>
-    <div class="contrib-legend">
-      <span data-es="Menos" data-en="Less">Menos</span>
-      <div class="contrib-legend-cell" style="background: #161b22; border: 1px solid #30363d;"></div>
-      <div class="contrib-legend-cell" style="background: #0e4429;"></div>
-      <div class="contrib-legend-cell" style="background: #006d32;"></div>
-      <div class="contrib-legend-cell" style="background: #26a641;"></div>
-      <div class="contrib-legend-cell" style="background: #39d353;"></div>
-      <span data-es="Más" data-en="More">Más</span>
+    <div class="bar-chart">
+      {% for bar in monthly_bars %}
+      <div class="bar-col">
+        <div class="bar-count">{{ bar.count if bar.count > 0 else '' }}</div>
+        <div class="bar-body">
+          <div class="bar-fill{% if bar.is_zero %} bar-fill--zero{% endif %}"
+               style="height: {{ bar.height_pct }}%;"
+               title="{{ bar.count }} commits · {{ bar.month_en }} {{ bar.year }}"></div>
+        </div>
+        <div class="bar-label"
+             data-es="{{ bar.month_es }}"
+             data-en="{{ bar.month_en }}">{{ bar.month_es }}</div>
+      </div>
+      {% endfor %}
     </div>
   </section>
 

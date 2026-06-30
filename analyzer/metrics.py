@@ -2,17 +2,19 @@ from collections import defaultdict
 from datetime import datetime, timezone
 
 
-def compute_language_distribution(repos_languages: list[dict]) -> dict[str, float]:
-    totals: dict[str, int] = defaultdict(int)
-    for lang_map in repos_languages:
-        for lang, bytes_count in lang_map.items():
-            totals[lang] += bytes_count
-    grand_total = sum(totals.values())
-    if grand_total == 0:
+def compute_language_distribution(repos: list[dict]) -> dict[str, float]:
+    """Returns language -> % of repos where it's the primary language (by repo count, not bytes)."""
+    counts: dict[str, int] = {}
+    for repo in repos:
+        lang = repo.get("language")
+        if lang:
+            counts[lang] = counts.get(lang, 0) + 1
+    total = sum(counts.values())
+    if total == 0:
         return {}
     return {
-        lang: round(bytes_count / grand_total * 100, 2)
-        for lang, bytes_count in sorted(totals.items(), key=lambda x: x[1], reverse=True)
+        lang: round(count / total * 100, 2)
+        for lang, count in sorted(counts.items(), key=lambda x: x[1], reverse=True)
     }
 
 
@@ -74,7 +76,11 @@ def _compute_monthly_counts(commits_by_repo: dict[str, list]) -> dict[str, int]:
     return dict(monthly)
 
 
-def compute_summary_stats(repos: list[dict], commits_by_repo: dict) -> dict:
+def compute_summary_stats(
+    repos: list[dict],
+    commits_by_repo: dict,
+    language_distribution: dict[str, float] | None = None,
+) -> dict:
     total_repos = len(repos)
     total_stars = sum(r.get("stargazers_count", 0) for r in repos)
     total_forks = sum(r.get("forks_count", 0) for r in repos)
@@ -87,12 +93,11 @@ def compute_summary_stats(repos: list[dict], commits_by_repo: dict) -> dict:
     monthly = _compute_monthly_counts(commits_by_repo)
     most_active_month = max(monthly, key=lambda k: monthly[k]) if monthly else None
 
-    lang_bytes: dict[str, int] = defaultdict(int)
-    for repo in repos:
-        lang = repo.get("language")
-        if lang:
-            lang_bytes[lang] += 1
-    primary_language = max(lang_bytes, key=lambda k: lang_bytes[k]) if lang_bytes else None
+    # Reuse language_distribution (already sorted by count desc) to stay in sync
+    if language_distribution:
+        primary_language = next(iter(language_distribution), None)
+    else:
+        primary_language = None
 
     return {
         "total_repos": total_repos,

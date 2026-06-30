@@ -3,7 +3,8 @@
     "allow": [
       "PowerShell(Get-ChildItem -Recurse \"C:\\\\Users\\\\dajoz\\\\Projects\\\\Varios\\\\PortfolioAnalyzer\" | Where-Object { !$_.PSIsContainer } | Select-Object FullName | Sort-Object FullName)",
       "PowerShell(New-Item -ItemType Directory -Force \"C:\\\\Users\\\\dajoz\\\\Projects\\\\Varios\\\\PortfolioAnalyzer\\\\.github\\\\workflows\")",
-      "PowerShell(Get-ChildItem -Recurse \"C:\\\\Users\\\\dajoz\\\\Projects\\\\Varios\\\\PortfolioAnalyzer\" | Where-Object { !$_.PSIsContainer } | Select-Object -ExpandProperty FullName | Sort-Object | ForEach-Object { $_.Replace\\(\"C:\\\\Users\\\\dajoz\\\\Projects\\\\Varios\\\\PortfolioAnalyzer\\\\\", \"\"\\) })"
+      "PowerShell(Get-ChildItem -Recurse \"C:\\\\Users\\\\dajoz\\\\Projects\\\\Varios\\\\PortfolioAnalyzer\" | Where-Object { !$_.PSIsContainer } | Select-Object -ExpandProperty FullName | Sort-Object | ForEach-Object { $_.Replace\\(\"C:\\\\Users\\\\dajoz\\\\Projects\\\\Varios\\\\PortfolioAnalyzer\\\\\", \"\"\\) })",
+      "Bash(python main.py --username dajozu2513 --output ./output/report.html)"
     ]
   }
 }
