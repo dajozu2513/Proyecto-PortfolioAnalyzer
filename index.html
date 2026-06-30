@@ -33,7 +33,7 @@
     padding: 0 1rem 4rem;
   }
 
-  .container { max-width: 860px; margin: 0 auto; }
+  .container { max-width: 1280px; margin: 0 auto; }
 
   a { color: var(--accent-blue); text-decoration: none; }
   a:hover { text-decoration: underline; }
@@ -147,46 +147,42 @@
   .repo-updated, .repo-forks { font-size: 12px; color: var(--text-muted); }
   .repo-forks { font-family: var(--font-mono); }
 
-  /* ── Contribution grid ── */
-  .contrib-wrapper { overflow-x: auto; }
-
-  .contrib-months {
-    display: flex; gap: 3px;
-    margin-bottom: 4px; padding-left: 0;
+  /* ── Monthly bar chart ── */
+  .bar-summary {
+    font-size: 12px; color: var(--text-muted);
+    font-family: var(--font-mono); margin-bottom: 1.25rem;
   }
-  .contrib-month-col {
-    flex: 0 0 11px; min-width: 11px;
+
+  .bar-chart {
+    display: flex; gap: 6px; height: 160px;
+  }
+
+  .bar-col {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+  }
+
+  .bar-count {
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--text-muted); height: 16px; line-height: 16px;
+    text-align: center; white-space: nowrap;
+  }
+
+  .bar-body {
+    flex: 1; width: 100%; display: flex; align-items: flex-end;
+  }
+
+  .bar-fill {
+    width: 100%; background: var(--accent-green);
+    border-radius: 3px 3px 0 0; min-height: 3px;
+    transition: background 0.15s;
+  }
+  .bar-fill--zero { background: var(--border-default); }
+  .bar-fill:hover { background: var(--accent-green-bright); }
+
+  .bar-label {
     font-family: var(--font-mono); font-size: 9px;
-    color: var(--text-muted);
-    overflow: visible; white-space: nowrap;
+    color: var(--text-muted); margin-top: 5px; text-align: center;
   }
-
-  .contrib-graph { display: flex; gap: 3px; }
-  .contrib-week { display: flex; flex-direction: column; gap: 3px; }
-
-  .contrib-cell {
-    width: 11px; height: 11px; border-radius: 2px; flex-shrink: 0;
-  }
-  .contrib-empty { opacity: 0; pointer-events: none; }
-
-  .contrib-cell[data-level="0"] { background: #21262d; }
-  .contrib-cell[data-level="1"] { background: #0e4429; }
-  .contrib-cell[data-level="2"] { background: #006d32; }
-  .contrib-cell[data-level="3"] { background: #26a641; }
-  .contrib-cell[data-level="4"] { background: #39d353; }
-
-  .contrib-cell[title]:hover {
-    outline: 1px solid var(--border-default);
-    outline-offset: 1px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .contrib-legend {
-    display: flex; align-items: center; gap: 0.4rem;
-    margin-top: 0.75rem; font-size: 11px; color: var(--text-muted);
-  }
-  .contrib-legend-cell { width: 11px; height: 11px; border-radius: 2px; }
 
   /* ── Footer ── */
   .footer {
@@ -194,6 +190,41 @@
     border-top: 1px solid var(--border-default);
     display: flex; justify-content: space-between; align-items: center;
     font-size: 12px; color: var(--text-muted); font-family: var(--font-mono);
+  }
+
+  /* ── Two-column desktop layout ── */
+  .two-col { margin-bottom: 2.5rem; }
+
+  @media (min-width: 1024px) {
+    .two-col {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 3.5rem;
+      align-items: start;
+    }
+    .two-col > .section { margin-bottom: 0; }
+
+    /* Header typography */
+    .header-info h1 { font-size: 28px; }
+    .header-info .handle { font-size: 23px; }
+    .header-info .bio { font-size: 15px; }
+
+    /* Stat badges */
+    .stat-pill { padding: 0.35rem 1rem; font-size: 13px; }
+    .pill-value { font-size: 15px; }
+    .pill-label { font-size: 12px; }
+
+    /* Donut */
+    #lang-donut { width: 220px; height: 220px; }
+
+    /* Repo cards */
+    .repo-card { padding: 1.25rem 1.5rem; }
+    .repo-name { font-size: 15px; }
+
+    /* Vertical spacing */
+    .section { margin-bottom: 3rem; }
+    .stat-grid { margin-bottom: 3rem; }
+    .two-col { margin-bottom: 3rem; }
   }
 
   @media (max-width: 640px) {
@@ -248,7 +279,7 @@
       <span class="pill-label" data-es="Forks" data-en="Forks">Forks</span>
     </div>
     <div class="stat-pill">
-      <span class="pill-value">16</span>
+      <span class="pill-value">17</span>
       <span class="pill-label" data-es="Commits / año" data-en="Commits / year">Commits / año</span>
     </div>
     
@@ -262,44 +293,43 @@
     
   </div>
 
+  <!-- ── 3 + 4. Two-column block (Languages | Top Repos) ── -->
+  <div class="two-col">
+
   <!-- ── 3. Languages ── -->
   
   <section class="section">
-    <div class="section-title" data-es="Lenguajes" data-en="Languages">Lenguajes</div>
+    <div class="section-title" data-es="Lenguajes por repositorio" data-en="Languages by repositories">Lenguajes por repositorio</div>
 
     <div class="lang-segment-bar">
       
       <div class="lang-segment"
-           style="flex: 42.38; background: #A97BFF;"
-           title="Kotlin 42.38%"></div>
+           style="flex: 20.0; background: #f1e05a;"
+           title="JavaScript 20.0%"></div>
       
       <div class="lang-segment"
-           style="flex: 13.08; background: #b07219;"
-           title="Java 13.08%"></div>
+           style="flex: 20.0; background: #f34b7d;"
+           title="C++ 20.0%"></div>
       
       <div class="lang-segment"
-           style="flex: 12.27; background: #4F5D95;"
-           title="PHP 12.27%"></div>
+           style="flex: 20.0; background: #A97BFF;"
+           title="Kotlin 20.0%"></div>
       
       <div class="lang-segment"
-           style="flex: 10.31; background: #e34c26;"
-           title="HTML 10.31%"></div>
+           style="flex: 10.0; background: #563d7c;"
+           title="CSS 10.0%"></div>
       
       <div class="lang-segment"
-           style="flex: 6.79; background: #f1e05a;"
-           title="JavaScript 6.79%"></div>
+           style="flex: 10.0; background: #4F5D95;"
+           title="PHP 10.0%"></div>
       
       <div class="lang-segment"
-           style="flex: 6.55; background: #f34b7d;"
-           title="C++ 6.55%"></div>
+           style="flex: 10.0; background: #e34c26;"
+           title="HTML 10.0%"></div>
       
       <div class="lang-segment"
-           style="flex: 6.32; background: #563d7c;"
-           title="CSS 6.32%"></div>
-      
-      <div class="lang-segment"
-           style="flex: 1.53; background: #3572A5;"
-           title="Python 1.53%"></div>
+           style="flex: 10.0; background: #b07219;"
+           title="Java 10.0%"></div>
       
     </div>
 
@@ -314,61 +344,13 @@
           <circle class="donut-seg"
                   cx="100" cy="100" r="70"
                   fill="none"
-                  stroke="#A97BFF"
+                  stroke="#f1e05a"
                   stroke-width="30"
-                  stroke-dasharray="186.40 439.82"
+                  stroke-dasharray="87.96 439.82"
                   stroke-dashoffset="-0.00"
                   stroke-linecap="butt"
                   style="animation-delay: 0.0s;">
-            <title>Kotlin 42.38%</title>
-          </circle>
-          
-          <circle class="donut-seg"
-                  cx="100" cy="100" r="70"
-                  fill="none"
-                  stroke="#b07219"
-                  stroke-width="30"
-                  stroke-dasharray="57.53 439.82"
-                  stroke-dashoffset="-186.40"
-                  stroke-linecap="butt"
-                  style="animation-delay: 0.07s;">
-            <title>Java 13.08%</title>
-          </circle>
-          
-          <circle class="donut-seg"
-                  cx="100" cy="100" r="70"
-                  fill="none"
-                  stroke="#4F5D95"
-                  stroke-width="30"
-                  stroke-dasharray="53.97 439.82"
-                  stroke-dashoffset="-243.93"
-                  stroke-linecap="butt"
-                  style="animation-delay: 0.14s;">
-            <title>PHP 12.27%</title>
-          </circle>
-          
-          <circle class="donut-seg"
-                  cx="100" cy="100" r="70"
-                  fill="none"
-                  stroke="#e34c26"
-                  stroke-width="30"
-                  stroke-dasharray="45.35 439.82"
-                  stroke-dashoffset="-297.89"
-                  stroke-linecap="butt"
-                  style="animation-delay: 0.21000000000000002s;">
-            <title>HTML 10.31%</title>
-          </circle>
-          
-          <circle class="donut-seg"
-                  cx="100" cy="100" r="70"
-                  fill="none"
-                  stroke="#f1e05a"
-                  stroke-width="30"
-                  stroke-dasharray="29.86 439.82"
-                  stroke-dashoffset="-343.24"
-                  stroke-linecap="butt"
-                  style="animation-delay: 0.28s;">
-            <title>JavaScript 6.79%</title>
+            <title>JavaScript 20.0%</title>
           </circle>
           
           <circle class="donut-seg"
@@ -376,11 +358,23 @@
                   fill="none"
                   stroke="#f34b7d"
                   stroke-width="30"
-                  stroke-dasharray="28.81 439.82"
-                  stroke-dashoffset="-373.10"
+                  stroke-dasharray="87.96 439.82"
+                  stroke-dashoffset="-87.96"
                   stroke-linecap="butt"
-                  style="animation-delay: 0.35000000000000003s;">
-            <title>C++ 6.55%</title>
+                  style="animation-delay: 0.07s;">
+            <title>C++ 20.0%</title>
+          </circle>
+          
+          <circle class="donut-seg"
+                  cx="100" cy="100" r="70"
+                  fill="none"
+                  stroke="#A97BFF"
+                  stroke-width="30"
+                  stroke-dasharray="87.96 439.82"
+                  stroke-dashoffset="-175.93"
+                  stroke-linecap="butt"
+                  style="animation-delay: 0.14s;">
+            <title>Kotlin 20.0%</title>
           </circle>
           
           <circle class="donut-seg"
@@ -388,23 +382,47 @@
                   fill="none"
                   stroke="#563d7c"
                   stroke-width="30"
-                  stroke-dasharray="27.80 439.82"
-                  stroke-dashoffset="-401.91"
+                  stroke-dasharray="43.98 439.82"
+                  stroke-dashoffset="-263.89"
                   stroke-linecap="butt"
-                  style="animation-delay: 0.42000000000000004s;">
-            <title>CSS 6.32%</title>
+                  style="animation-delay: 0.21000000000000002s;">
+            <title>CSS 10.0%</title>
           </circle>
           
           <circle class="donut-seg"
                   cx="100" cy="100" r="70"
                   fill="none"
-                  stroke="#3572A5"
+                  stroke="#4F5D95"
                   stroke-width="30"
-                  stroke-dasharray="6.73 439.82"
-                  stroke-dashoffset="-429.71"
+                  stroke-dasharray="43.98 439.82"
+                  stroke-dashoffset="-307.88"
                   stroke-linecap="butt"
-                  style="animation-delay: 0.49000000000000005s;">
-            <title>Python 1.53%</title>
+                  style="animation-delay: 0.28s;">
+            <title>PHP 10.0%</title>
+          </circle>
+          
+          <circle class="donut-seg"
+                  cx="100" cy="100" r="70"
+                  fill="none"
+                  stroke="#e34c26"
+                  stroke-width="30"
+                  stroke-dasharray="43.98 439.82"
+                  stroke-dashoffset="-351.86"
+                  stroke-linecap="butt"
+                  style="animation-delay: 0.35000000000000003s;">
+            <title>HTML 10.0%</title>
+          </circle>
+          
+          <circle class="donut-seg"
+                  cx="100" cy="100" r="70"
+                  fill="none"
+                  stroke="#b07219"
+                  stroke-width="30"
+                  stroke-dasharray="43.98 439.82"
+                  stroke-dashoffset="-395.84"
+                  stroke-linecap="butt"
+                  style="animation-delay: 0.42000000000000004s;">
+            <title>Java 10.0%</title>
           </circle>
           
         </g>
@@ -423,51 +441,45 @@
       <div class="lang-legend">
         
         <div class="lang-legend-item">
-          <span class="lang-dot" style="background: #A97BFF;"></span>
-          <span>Kotlin</span>
-          <span class="lang-pct">42.38%</span>
-        </div>
-        
-        <div class="lang-legend-item">
-          <span class="lang-dot" style="background: #b07219;"></span>
-          <span>Java</span>
-          <span class="lang-pct">13.08%</span>
-        </div>
-        
-        <div class="lang-legend-item">
-          <span class="lang-dot" style="background: #4F5D95;"></span>
-          <span>PHP</span>
-          <span class="lang-pct">12.27%</span>
-        </div>
-        
-        <div class="lang-legend-item">
-          <span class="lang-dot" style="background: #e34c26;"></span>
-          <span>HTML</span>
-          <span class="lang-pct">10.31%</span>
-        </div>
-        
-        <div class="lang-legend-item">
           <span class="lang-dot" style="background: #f1e05a;"></span>
           <span>JavaScript</span>
-          <span class="lang-pct">6.79%</span>
+          <span class="lang-pct">20.0%</span>
         </div>
         
         <div class="lang-legend-item">
           <span class="lang-dot" style="background: #f34b7d;"></span>
           <span>C++</span>
-          <span class="lang-pct">6.55%</span>
+          <span class="lang-pct">20.0%</span>
+        </div>
+        
+        <div class="lang-legend-item">
+          <span class="lang-dot" style="background: #A97BFF;"></span>
+          <span>Kotlin</span>
+          <span class="lang-pct">20.0%</span>
         </div>
         
         <div class="lang-legend-item">
           <span class="lang-dot" style="background: #563d7c;"></span>
           <span>CSS</span>
-          <span class="lang-pct">6.32%</span>
+          <span class="lang-pct">10.0%</span>
         </div>
         
         <div class="lang-legend-item">
-          <span class="lang-dot" style="background: #3572A5;"></span>
-          <span>Python</span>
-          <span class="lang-pct">1.53%</span>
+          <span class="lang-dot" style="background: #4F5D95;"></span>
+          <span>PHP</span>
+          <span class="lang-pct">10.0%</span>
+        </div>
+        
+        <div class="lang-legend-item">
+          <span class="lang-dot" style="background: #e34c26;"></span>
+          <span>HTML</span>
+          <span class="lang-pct">10.0%</span>
+        </div>
+        
+        <div class="lang-legend-item">
+          <span class="lang-dot" style="background: #b07219;"></span>
+          <span>Java</span>
+          <span class="lang-pct">10.0%</span>
         </div>
         
       </div>
@@ -477,7 +489,7 @@
 
   <!-- ── 4. Top Repositories ── -->
   <section class="section">
-    <div class="section-title" data-es="Repositorios destacados" data-en="Top Repositories">Repositorios destacados</div>
+    <div class="section-title" data-es="Repositorios recientes" data-en="Recent Repositories">Repositorios recientes</div>
     <div class="repo-list">
       
       <div class="repo-card">
@@ -593,2515 +605,163 @@
     </div>
   </section>
 
-  <!-- ── 5. Commit Activity — 52-week contribution grid ── -->
+  </div><!-- /.two-col -->
+
+  <!-- ── 5. Commit Activity — 12-month bar chart ── -->
   <section class="section">
     <div class="section-title" data-es="Actividad de commits" data-en="Commit Activity">Actividad de commits</div>
-    <div class="contrib-wrapper">
-      <!-- Month labels row -->
-      <div class="contrib-months">
-        
-        <div class="contrib-month-col">Jul</div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col">Aug</div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col">Sep</div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col">Oct</div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col">Nov</div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col">Dec</div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col">Jan</div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col">Feb</div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col">Mar</div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col">Apr</div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col">May</div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col">Jun</div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-        <div class="contrib-month-col"></div>
-        
-      </div>
-      <!-- Grid: 52 columns × 7 rows -->
-      <div class="contrib-graph">
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-07-06: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-07-07: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-07-08: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-07-09: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-07-10: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-07-11: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-07-12: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-07-13: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-07-14: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-07-15: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-07-16: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-07-17: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-07-18: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-07-19: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-07-20: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-07-21: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-07-22: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-07-23: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-07-24: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-07-25: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-07-26: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-07-27: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-07-28: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-07-29: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-07-30: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-07-31: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-01: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-02: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-03: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-04: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-05: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-06: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-07: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-08: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-09: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-10: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-11: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-12: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-13: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-14: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-15: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-16: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-17: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-18: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-19: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-20: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-21: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-22: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-23: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-24: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-25: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-26: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-27: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-28: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-29: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-30: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-08-31: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-01: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-02: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-03: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-04: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-05: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-06: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-07: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-08: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-09: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-10: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-11: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-12: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-13: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-14: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-15: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-16: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-17: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-18: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-19: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-20: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-21: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-22: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-23: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-24: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-25: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-26: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-27: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-28: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-29: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-09-30: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-01: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-02: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-03: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-04: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-05: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-06: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-07: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-08: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-09: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-10: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-11: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-12: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-13: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-14: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-15: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-16: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-17: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-18: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-19: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-20: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-21: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-22: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-23: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-24: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-25: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-26: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-27: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-28: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-29: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-30: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-10-31: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-01: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-02: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-03: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-04: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-05: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-06: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-07: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-08: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-09: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-10: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-11: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-12: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-13: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-14: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-15: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-16: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-17: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-18: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-19: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-20: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-21: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-22: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-23: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-24: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-25: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-26: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-27: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-28: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-29: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-11-30: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-01: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-02: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-03: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-04: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-05: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-06: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-07: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-08: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-09: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-10: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-11: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-12: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-13: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-14: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-15: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-16: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-17: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-18: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-19: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-20: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-21: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-22: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-23: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-24: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-25: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-26: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-27: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-28: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-29: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-30: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2025-12-31: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-01: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-02: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-03: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-04: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-05: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-06: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-07: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-08: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-09: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-10: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-11: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-12: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-13: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-14: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-15: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-16: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-17: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-18: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-19: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-20: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-21: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-22: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-23: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-24: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-25: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-26: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-27: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-28: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-29: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-30: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-01-31: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-01: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-02: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-03: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-04: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-05: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-06: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-07: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-08: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-09: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-10: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-11: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-12: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-13: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-14: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-15: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-16: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-17: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-18: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-19: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-20: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-21: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-22: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-23: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-24: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-25: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-26: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-27: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-02-28: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-01: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-02: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-03: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-04: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-05: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-06: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-07: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-08: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-09: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-10: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-11: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-12: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-13: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-14: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-15: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-16: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-17: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-18: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-19: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-20: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-21: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-22: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-23: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-24: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-25: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-26: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-27: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-28: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-29: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-30: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-03-31: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-04-01: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-04-02: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="4"
-               title="2026-04-03: 6 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="1"
-               title="2026-04-04: 1 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-04-05: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-04-06: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="1"
-               title="2026-04-07: 1 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-04-08: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-04-09: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-04-10: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-04-11: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-04-12: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-04-13: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-04-14: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-04-15: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-04-16: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-04-17: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-04-18: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-04-19: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-04-20: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-04-21: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-04-22: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-04-23: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-04-24: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-04-25: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-04-26: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-04-27: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-04-28: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-04-29: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-04-30: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-01: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-02: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-03: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-04: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-05: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-06: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-07: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-08: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-09: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-10: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-11: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-12: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-13: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-14: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-15: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-16: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-17: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-18: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-19: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-20: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-21: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-22: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-23: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-24: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-25: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-26: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-27: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-28: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-29: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-30: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-05-31: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-01: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-02: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-03: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-04: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-05: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-06: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-07: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-08: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-09: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-10: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-11: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-12: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-13: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-14: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-15: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-16: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-17: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-18: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-19: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-20: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-21: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-22: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-23: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-24: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-25: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-26: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-27: 0 commits"></div>
-          
-          
-        </div>
-        
-        <div class="contrib-week">
-          
-          
-          <div class="contrib-cell"
-               data-level="4"
-               title="2026-06-28: 7 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="0"
-               title="2026-06-29: 0 commits"></div>
-          
-          
-          
-          <div class="contrib-cell"
-               data-level="1"
-               title="2026-06-30: 1 commits"></div>
-          
-          
-          
-          <div class="contrib-cell contrib-empty"></div>
-          
-          
-          
-          <div class="contrib-cell contrib-empty"></div>
-          
-          
-          
-          <div class="contrib-cell contrib-empty"></div>
-          
-          
-          
-          <div class="contrib-cell contrib-empty"></div>
-          
-          
-        </div>
-        
-      </div>
+    <div class="bar-summary">
+      <span data-es="17 commits en los últimos 12 meses"
+            data-en="17 commits in the last 12 months">
+        17 commits en los últimos 12 meses
+      </span>
     </div>
-    <div class="contrib-legend">
-      <span data-es="Menos" data-en="Less">Menos</span>
-      <div class="contrib-legend-cell" style="background: #161b22; border: 1px solid #30363d;"></div>
-      <div class="contrib-legend-cell" style="background: #0e4429;"></div>
-      <div class="contrib-legend-cell" style="background: #006d32;"></div>
-      <div class="contrib-legend-cell" style="background: #26a641;"></div>
-      <div class="contrib-legend-cell" style="background: #39d353;"></div>
-      <span data-es="Más" data-en="More">Más</span>
+    <div class="bar-chart">
+      
+      <div class="bar-col">
+        <div class="bar-count"></div>
+        <div class="bar-body">
+          <div class="bar-fill bar-fill--zero"
+               style="height: 0.0%;"
+               title="0 commits · Jul 2025"></div>
+        </div>
+        <div class="bar-label"
+             data-es="Jul"
+             data-en="Jul">Jul</div>
+      </div>
+      
+      <div class="bar-col">
+        <div class="bar-count"></div>
+        <div class="bar-body">
+          <div class="bar-fill bar-fill--zero"
+               style="height: 0.0%;"
+               title="0 commits · Aug 2025"></div>
+        </div>
+        <div class="bar-label"
+             data-es="Ago"
+             data-en="Aug">Ago</div>
+      </div>
+      
+      <div class="bar-col">
+        <div class="bar-count"></div>
+        <div class="bar-body">
+          <div class="bar-fill bar-fill--zero"
+               style="height: 0.0%;"
+               title="0 commits · Sep 2025"></div>
+        </div>
+        <div class="bar-label"
+             data-es="Sep"
+             data-en="Sep">Sep</div>
+      </div>
+      
+      <div class="bar-col">
+        <div class="bar-count"></div>
+        <div class="bar-body">
+          <div class="bar-fill bar-fill--zero"
+               style="height: 0.0%;"
+               title="0 commits · Oct 2025"></div>
+        </div>
+        <div class="bar-label"
+             data-es="Oct"
+             data-en="Oct">Oct</div>
+      </div>
+      
+      <div class="bar-col">
+        <div class="bar-count"></div>
+        <div class="bar-body">
+          <div class="bar-fill bar-fill--zero"
+               style="height: 0.0%;"
+               title="0 commits · Nov 2025"></div>
+        </div>
+        <div class="bar-label"
+             data-es="Nov"
+             data-en="Nov">Nov</div>
+      </div>
+      
+      <div class="bar-col">
+        <div class="bar-count"></div>
+        <div class="bar-body">
+          <div class="bar-fill bar-fill--zero"
+               style="height: 0.0%;"
+               title="0 commits · Dec 2025"></div>
+        </div>
+        <div class="bar-label"
+             data-es="Dic"
+             data-en="Dec">Dic</div>
+      </div>
+      
+      <div class="bar-col">
+        <div class="bar-count"></div>
+        <div class="bar-body">
+          <div class="bar-fill bar-fill--zero"
+               style="height: 0.0%;"
+               title="0 commits · Jan 2026"></div>
+        </div>
+        <div class="bar-label"
+             data-es="Ene"
+             data-en="Jan">Ene</div>
+      </div>
+      
+      <div class="bar-col">
+        <div class="bar-count"></div>
+        <div class="bar-body">
+          <div class="bar-fill bar-fill--zero"
+               style="height: 0.0%;"
+               title="0 commits · Feb 2026"></div>
+        </div>
+        <div class="bar-label"
+             data-es="Feb"
+             data-en="Feb">Feb</div>
+      </div>
+      
+      <div class="bar-col">
+        <div class="bar-count"></div>
+        <div class="bar-body">
+          <div class="bar-fill bar-fill--zero"
+               style="height: 0.0%;"
+               title="0 commits · Mar 2026"></div>
+        </div>
+        <div class="bar-label"
+             data-es="Mar"
+             data-en="Mar">Mar</div>
+      </div>
+      
+      <div class="bar-col">
+        <div class="bar-count">8</div>
+        <div class="bar-body">
+          <div class="bar-fill"
+               style="height: 88.9%;"
+               title="8 commits · Apr 2026"></div>
+        </div>
+        <div class="bar-label"
+             data-es="Abr"
+             data-en="Apr">Abr</div>
+      </div>
+      
+      <div class="bar-col">
+        <div class="bar-count"></div>
+        <div class="bar-body">
+          <div class="bar-fill bar-fill--zero"
+               style="height: 0.0%;"
+               title="0 commits · May 2026"></div>
+        </div>
+        <div class="bar-label"
+             data-es="May"
+             data-en="May">May</div>
+      </div>
+      
+      <div class="bar-col">
+        <div class="bar-count">9</div>
+        <div class="bar-body">
+          <div class="bar-fill"
+               style="height: 100.0%;"
+               title="9 commits · Jun 2026"></div>
+        </div>
+        <div class="bar-label"
+             data-es="Jun"
+             data-en="Jun">Jun</div>
+      </div>
+      
     </div>
   </section>
 
